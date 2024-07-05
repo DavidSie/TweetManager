@@ -25,7 +25,7 @@ jobs:
         fetch-depth: 0
 
     - name: Build
-      run: go build -vo bin/tweetManager ./cmd/...
+      run: go build -v -o bin/tweetManager ./cmd/...
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
