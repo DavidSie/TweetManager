@@ -1,0 +1,1 @@
+drop_index("tweets", "tweets_symbol_text_idx")

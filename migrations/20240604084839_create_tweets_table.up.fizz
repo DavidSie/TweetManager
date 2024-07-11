@@ -1,0 +1,7 @@
+create_table("tweets") {
+    t.Column("id", "integer", {primary: true})
+    t.Column("text", "string", { "size": 560})
+    t.Column("author_id", "string", {"default": ""})
+    t.Column("symbol", "string", {"default": ""})
+    t.Column("tweet_created_at", "timestamp", {})
+}

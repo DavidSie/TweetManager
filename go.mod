@@ -5,14 +5,25 @@ go 1.22.2
 require (
 	github.com/alexedwards/scs/v2 v2.8.0
 	github.com/cvcio/twitter v0.0.0-20230702171346-58f04a1d303c
+	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/chi/v5 v5.1.0
+	github.com/go-chi/httprate v0.9.0
+	github.com/jackc/pgconn v1.14.3
+	github.com/jackc/pgx/v4 v4.18.3
 	github.com/spf13/viper v1.19.0
 )
 
 require (
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
+	github.com/jackc/pgio v1.0.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgproto3/v2 v2.3.3 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/pgtype v1.14.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mrjones/oauth v0.0.0-20190623134757-126b35219450 // indirect
@@ -26,6 +37,7 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/oauth2 v0.18.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
