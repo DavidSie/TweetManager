@@ -18,7 +18,6 @@ var theTests = []struct {
 	expectedStatusCode int
 }{
 	{"home", "/", "GET", http.StatusOK},
-	{"tweets with emotions", "/tweets-with-emotions", "GET", http.StatusOK},
 }
 
 func TestHandlers(t *testing.T) {
@@ -101,7 +100,63 @@ func TestRepository_TweetsJSON(t *testing.T) {
 		handler.ServeHTTP(rr, req)
 
 		if rr.Code != int(tc.expectedCode) {
-			t.Errorf("Test case %s:\n Tweet JSON handler returned wrong response code: got  %d, wanted %d", tc.name, rr.Code, http.StatusOK)
+			t.Errorf("Test case %s:\n Tweet JSON handler returned wrong response code: got  %d, wanted %d", tc.name, rr.Code, tc.expectedCode)
+		}
+		if tc.isResponseBodyATweetResponse {
+			// I'll check only if the data is parsable to TweetResponse Tweets as the result depends on test-repo, which is for testing purposes only
+			expectedResponse := model.TweetResponse{}
+			err = json.Unmarshal(rr.Body.Bytes(), &expectedResponse)
+			if err != nil {
+				t.Error(err.Error())
+			}
+			if expectedResponse.OK != tc.expectedResponseOK {
+				t.Errorf("Test case %s:\n expected response.OK to be %v, got %v", tc.name, tc.expectedResponseOK, expectedResponse.OK)
+			}
+		}
+	}
+
+}
+
+func TestRepository_TweetsWithEmotionsJSON(t *testing.T) {
+
+	testCases := []struct {
+		name                         string
+		url                          string
+		expectedCode                 uint
+		isResponseBodyATweetResponse bool
+		expectedResponseOK           bool
+	}{
+		{
+			name:                         "Succesful path",
+			url:                          "/tweets-with-emotions?symbol=my_symbol",
+			expectedCode:                 http.StatusOK,
+			isResponseBodyATweetResponse: true,
+			expectedResponseOK:           true,
+		},
+		{
+			name:                         "Missing Symbol",
+			url:                          "/tweets-with-emotions",
+			expectedCode:                 http.StatusBadRequest,
+			isResponseBodyATweetResponse: false,
+		},
+		{
+			name:                         "Database Error",
+			url:                          fmt.Sprintf("/tweets-with-emotions?symbol=%s", dbrepo.TriggerDBErrorSymbolOnTest),
+			expectedCode:                 http.StatusInternalServerError,
+			isResponseBodyATweetResponse: false,
+		},
+	}
+	for _, tc := range testCases {
+		req, err := http.NewRequest("GET", tc.url, nil)
+		if err != nil {
+			t.Errorf("Test case %s:\n did not expect error but got one: %s", tc.name, err.Error())
+		}
+		rr := httptest.NewRecorder()
+		handler := http.HandlerFunc(Repo.TweetsWithEmotionsJSON)
+		handler.ServeHTTP(rr, req)
+
+		if rr.Code != int(tc.expectedCode) {
+			t.Errorf("Test case %s:\n Tweet JSON handler returned wrong response code: got  %d, wanted %d", tc.name, rr.Code, tc.expectedCode)
 		}
 		if tc.isResponseBodyATweetResponse {
 			// I'll check only if the data is parsable to TweetResponse Tweets as the result depends on test-repo, which is for testing purposes only

@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"time"
 
@@ -53,7 +52,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	//render.Template(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
-// TweetsJSON is a function that uses parameters: symbol, start_date, end_date  from query database for the tweets in this time frame
+// TweetsJSON is a function that uses parameters: symbol, start_date, end_date  from query and returns tweets in this time frame
 //
 // curl "http://localhost:8080/tweets?symbol=symbol&start_date=2024-06-24&end_date=2024-07-09"
 func (m *Repository) TweetsJSON(w http.ResponseWriter, r *http.Request) {
@@ -109,14 +108,27 @@ func (m *Repository) TweetsJSON(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Home is the home page handler
+// TweetsWithEmotionsJSON is afunction that uses parameter symbol and returns all tweets with emotions for this symbol
 func (m *Repository) TweetsWithEmotionsJSON(w http.ResponseWriter, r *http.Request) {
-
 	resp := model.TweetResponse{}
+
+	symbol := r.URL.Query().Get("symbol")
+	if len(symbol) == 0 {
+		helpers.ClientError(w, http.StatusBadRequest, "symbol not set as query parameter")
+		return
+	}
+
+	tweets, err := m.DB.GetAllTweetsWithEmotionsBySymbol(symbol)
+	if err != nil {
+		helpers.ServerError(w, errors.New("error can't get tweets by the symbol by date: "+err.Error()))
+		return
+	}
+
+	resp.Tweets = tweets
+	resp.OK = true
 	out, err := json.MarshalIndent(resp, "", "	")
 	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		helpers.ServerError(w, errors.New("error can't marshal response into json: "+err.Error()))
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -124,5 +136,4 @@ func (m *Repository) TweetsWithEmotionsJSON(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		m.App.ErrorLog.Println(err)
 	}
-	//render.Template(w, r, "home.page.tmpl", &models.TemplateData{})
 }

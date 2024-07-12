@@ -23,5 +23,8 @@ func (t TestDBRepo) GetTweetsBySymbolByDate(Symbol string, start, end time.Time)
 	return nil, nil
 }
 func (t TestDBRepo) GetAllTweetsWithEmotionsBySymbol(Symbol string) ([]twitter.Tweet, error) {
+	if Symbol == TriggerDBErrorSymbolOnTest {
+		return nil, errors.New("database Error")
+	}
 	return nil, nil
 }

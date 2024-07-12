@@ -78,6 +78,7 @@ CREATE TABLE public.tweets_with_emotions (
     id integer NOT NULL,
     text character varying(560) NOT NULL,
     author_id character varying(255) DEFAULT ''::character varying NOT NULL,
+    symbol character varying(255) DEFAULT ''::character varying NOT NULL,
     tweet_created_at timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -158,6 +159,13 @@ CREATE UNIQUE INDEX schema_migration_version_idx ON public.schema_migration USIN
 --
 
 CREATE INDEX tweets_symbol_text_idx ON public.tweets USING btree (symbol, text);
+
+
+--
+-- Name: tweets_with_emotions_symbol_text_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX tweets_with_emotions_symbol_text_idx ON public.tweets_with_emotions USING btree (symbol, text);
 
 
 --
