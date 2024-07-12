@@ -2,5 +2,6 @@ create_table("tweets_with_emotions") {
     t.Column("id", "integer", {primary: true})
     t.Column("text", "string", { "unique": true,"size": 560})
     t.Column("author_id", "string", {"default": ""})
+    t.Column("symbol", "string", {"default": ""})
     t.Column("tweet_created_at", "timestamp", {})
 }

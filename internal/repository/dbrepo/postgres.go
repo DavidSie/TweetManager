@@ -108,7 +108,7 @@ func (p postgresDBRepo) GetTweetsBySymbolByDate(symbol string, start, end time.T
 }
 
 // GetAllTweetsWithEmotionsBySymbol returns all tweets with emotions for a given symbol
-func (p postgresDBRepo) GetAllTweetsWithEmotionsBySymbol(Symbol string) ([]twitter.Tweet, error) {
+func (p postgresDBRepo) GetAllTweetsWithEmotionsBySymbol(symbol string) ([]twitter.Tweet, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	tweets := []twitter.Tweet{}
@@ -118,10 +118,12 @@ func (p postgresDBRepo) GetAllTweetsWithEmotionsBySymbol(Symbol string) ([]twitt
 			id, text, author_id, tweet_created_at
 		from 
 			tweets_with_emotions
+		where
+			symbol = $1
 		
 		
 	`
-	rows, err := p.DB.QueryContext(ctx, query)
+	rows, err := p.DB.QueryContext(ctx, query, symbol)
 	if err != nil {
 		return tweets, err
 	}

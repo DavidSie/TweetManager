@@ -1,0 +1,1 @@
+add_index("tweets_with_emotions", ["symbol", "text"], {})
