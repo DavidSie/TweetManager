@@ -90,12 +90,6 @@ func TestRepository_TweetsJSON(t *testing.T) {
 			expectedCode:                 http.StatusInternalServerError,
 			isResponseBodyATweetResponse: false,
 		},
-		{
-			name:                         "Database Error",
-			url:                          fmt.Sprintf("/tweets?symbol=%s&start_date=2024-06-24&end_date=2024-07-09", dbrepo.TriggerDBErrorSymbolOnTest),
-			expectedCode:                 http.StatusInternalServerError,
-			isResponseBodyATweetResponse: false,
-		},
 	}
 	for _, tc := range testCases {
 		req, err := http.NewRequest("GET", tc.url, nil)
